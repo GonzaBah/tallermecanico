@@ -46,3 +46,17 @@ class Proveedor(models.Model):
     fonoProveedor = models.CharField(max_length=85, verbose_name="Fono proveedor")
 
     rubroProveedor = models.CharField(max_length=85, verbose_name="Rubro Proveedor")
+
+
+class Producto(models.Model):
+    idProducto = models.AutoField(primary_key=True, verbose_name="Codigo producto")
+    nombreProducto = models.CharField(max_length=30, verbose_name="Nombre producto")
+    stockProducto = models.IntegerField(verbose_name="Codigo producto")
+    idProveedor = models.ForeignKey(Proveedor, on_delete=models.SET_NULL, null=True)
+
+
+class Servicio(models.Model):
+    idServicio = models.AutoField(primary_key=True, verbose_name="Codigo cliente")
+    nombresServicio = models.CharField(max_length=30, verbose_name="Nombre cliente")
+    idProducto = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True)
+    idEstado = models.ForeignKey(Estado, on_delete=models.SET_NULL, null=True)
