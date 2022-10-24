@@ -11,8 +11,11 @@ def inicio(request):
 
 
 def stock(request, id, num):
-    producto = Producto.objects.get(id=id)
-    producto.stockProducto = producto.stockProducto + num
+    producto = Producto.objects.get(idProducto=id)
+    if num == 0:
+        producto.stockProducto = producto.stockProducto - 1
+    else:
+        producto.stockProducto = producto.stockProducto + 1
 
     producto.save()
 
