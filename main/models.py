@@ -60,3 +60,28 @@ class Servicio(models.Model):
     nombresServicio = models.CharField(max_length=30, verbose_name="Nombre cliente")
     idProducto = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True)
     idEstado = models.ForeignKey(Estado, on_delete=models.SET_NULL, null=True)
+
+class Recibo():
+    idRecibo = models.AutoField(primary_key=True, verbose_name="Codigo recibo")
+    fechaRecibo = models.DateField(verbose_name="Fecha del Recibo")
+    totalRecibo = models.IntegerField(verbose_name="Valor Total")
+    idTipoRecibo = models.ForeignKey(TipoRecibo, on_delete=models.SET_NULL, null=True)
+
+class Pedido():
+    idPedido = models.AutoField(primary_key=True, verbose_name="Codigo pedido")
+    fechaPedido = models.DateField(verbose_name="Fecha del Pedido")
+    fechaEntrega = models.DateField(null=True, verbose_name="Fecha de Entrega")
+    valorPedido = models.IntegerField(verbose_name="Valor del Pedido")
+    idEstado = models.ForeignKey(Estado, on_delete=models.SET_NULL, null=True)
+    idProveedor = models.ForeignKey(Proveedor, on_delete=models.SET_NULL, null=True)
+    idRecibo = models.ForeignKey(Recibo, on_delete=models.SET_NULL, null=True)
+
+class Servicio_Cliente():
+    idSolicitud = models.AutoField(primary_key=True, verbose_name="Codigo Solicitud Servicio")
+    fechaSolicitud = models.DateField(verbose_name="Fecha de la Solicitud")
+    horaReserva = models.TimeField(verbose_name="Hora de la Reserva")
+    idCliente = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True)
+    idServicio = models.ForeignKey(Servicio, on_delete=models.SET_NULL, null=True)
+    idEstado = models.ForeignKey(Estado, on_delete=models.SET_NULL, null=True)
+    idRecibo = models.ForeignKey(Recibo, on_delete=models.SET_NULL, null=True)
+
