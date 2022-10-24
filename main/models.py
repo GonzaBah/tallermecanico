@@ -1,6 +1,6 @@
 from django.db import models
 
-# Create your models here.
+
 class Estado(models.Model):
     idEstado = models.AutoField(primary_key=True, verbose_name="Codigo estado")
     nombreEstado = models.CharField(max_length=30, verbose_name="Nombre estado")
@@ -11,6 +11,13 @@ class TipoRecibo(models.Model):
     nombreTipoRecibo = models.CharField(
         max_length=30, verbose_name="Nombre tipo recibo"
     )
+
+
+class Recibo(models.Model):
+    idRecibo = models.AutoField(primary_key=True, verbose_name="Codigo recibo")
+    fechaRecibo = models.DateField(verbose_name="Fecha del Recibo")
+    totalRecibo = models.IntegerField(verbose_name="Valor Total")
+    idTipoRecibo = models.ForeignKey(TipoRecibo, on_delete=models.SET_NULL, null=True)
 
 
 class Usuario(models.Model):
@@ -44,14 +51,13 @@ class Proveedor(models.Model):
         max_length=85, verbose_name="Domicilio proveedor"
     )
     fonoProveedor = models.CharField(max_length=85, verbose_name="Fono proveedor")
-
     rubroProveedor = models.CharField(max_length=85, verbose_name="Rubro Proveedor")
 
 
 class Producto(models.Model):
     idProducto = models.AutoField(primary_key=True, verbose_name="Codigo producto")
     nombreProducto = models.CharField(max_length=30, verbose_name="Nombre producto")
-    stockProducto = models.IntegerField(verbose_name="Codigo producto")
+    stockProducto = models.IntegerField(verbose_name="Stock producto")
     idProveedor = models.ForeignKey(Proveedor, on_delete=models.SET_NULL, null=True)
 
 
@@ -60,14 +66,12 @@ class Servicio(models.Model):
     nombresServicio = models.CharField(max_length=30, verbose_name="Nombre cliente")
     idProducto = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True)
     idEstado = models.ForeignKey(Estado, on_delete=models.SET_NULL, null=True)
+    if not Estado.idEstado:
+        Estado.objects.create(nombreEstado="Activo")
+        Estado.objects.create(nombreEstado="Inactivo")
 
-class Recibo():
-    idRecibo = models.AutoField(primary_key=True, verbose_name="Codigo recibo")
-    fechaRecibo = models.DateField(verbose_name="Fecha del Recibo")
-    totalRecibo = models.IntegerField(verbose_name="Valor Total")
-    idTipoRecibo = models.ForeignKey(TipoRecibo, on_delete=models.SET_NULL, null=True)
 
-class Pedido():
+class Pedido(models.Model):
     idPedido = models.AutoField(primary_key=True, verbose_name="Codigo pedido")
     fechaPedido = models.DateField(verbose_name="Fecha del Pedido")
     fechaEntrega = models.DateField(null=True, verbose_name="Fecha de Entrega")
@@ -76,12 +80,14 @@ class Pedido():
     idProveedor = models.ForeignKey(Proveedor, on_delete=models.SET_NULL, null=True)
     idRecibo = models.ForeignKey(Recibo, on_delete=models.SET_NULL, null=True)
 
-class Servicio_Cliente():
-    idSolicitud = models.AutoField(primary_key=True, verbose_name="Codigo Solicitud Servicio")
+
+class ServicioCliente(models.Model):
+    idSolicitud = models.AutoField(
+        primary_key=True, verbose_name="Codigo Solicitud Servicio"
+    )
     fechaSolicitud = models.DateField(verbose_name="Fecha de la Solicitud")
     horaReserva = models.TimeField(verbose_name="Hora de la Reserva")
     idCliente = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True)
     idServicio = models.ForeignKey(Servicio, on_delete=models.SET_NULL, null=True)
     idEstado = models.ForeignKey(Estado, on_delete=models.SET_NULL, null=True)
     idRecibo = models.ForeignKey(Recibo, on_delete=models.SET_NULL, null=True)
-
